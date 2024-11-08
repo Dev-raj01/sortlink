@@ -10,6 +10,5 @@ RUN go build -o shortify-server
 FROM alpine:3.18
 WORKDIR /app
 COPY --from=builder /app/shortify-server .
-COPY --from=builder /app/utils/words_alpha.txt ./utils/words_alpha.txt
 EXPOSE 5566
 CMD ["./shortify-server"]
