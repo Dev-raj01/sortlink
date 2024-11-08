@@ -15,6 +15,8 @@ func InitRouter(app *fiber.App) {
 	short.Get("/shorts/:id", GetAURLs)
 	short.Post("/shorts", CreateURL)
 	short.Delete("/shorts/:id", DeleteURL)
+
+	app.Get("/r/:redirect", Redirect)
 }
 
 func GetAllURLs(c *fiber.Ctx) error {
@@ -73,4 +75,21 @@ func DeleteURL(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "ok",
 	})
+}
+
+func Redirect(c *fiber.Ctx) error {
+	reirectURL := c.Params("redirect")
+	URL, err := database.FindURLbyURL(reirectURL)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "error finding url by url " + err.Error(),
+		})
+	}
+	URL.Clicked++
+	if err := database.UpdateURL(URL); err!= nil {
+		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "error updating url clicks " + err.Error(),
+		})
+	}
+	return c.Redirect(URL.Target, fiber.StatusTemporaryRedirect)
 }

@@ -51,9 +51,9 @@ func DeleteURL(id uint64) error {
 	return DBConn.Unscoped().Delete(&models.URL{}, id).Error
 }
 
-func FindURLbyTarget(target string) (models.URL, error) {
+func FindURLbyURL(url string) (models.URL, error) {
 	var URL models.URL
-	tx := DBConn.Where("target = ?", target).First(&URL)
+	tx := DBConn.Where("url = ?", url).First(&URL)
 	if tx.Error != nil {
 		return models.URL{}, tx.Error
 	}
