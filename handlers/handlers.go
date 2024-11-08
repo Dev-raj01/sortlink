@@ -34,13 +34,13 @@ func GetAllURLs(c *fiber.Ctx) error {
 func GetURL(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error parsing id " + err.Error(),
 		})
 	}
 	URL, err := database.GetURL(id)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error getting url from database " + err.Error(),
 		})
 	}
@@ -50,7 +50,7 @@ func GetURL(c *fiber.Ctx) error {
 func CreateURL(c *fiber.Ctx) error {
 	var URL models.URL
 	if err := c.BodyParser(&URL); err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "error parsing body " + err.Error(),
 		})
 	}
@@ -71,12 +71,12 @@ func CreateURL(c *fiber.Ctx) error {
 func DeleteURL(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error parsing id " + err.Error(),
 		})
 	}
 	if err := database.DeleteURL(id); err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error deleting url by id " + err.Error(),
 		})
 	}
@@ -89,13 +89,13 @@ func Redirect(c *fiber.Ctx) error {
 	reirectURL := c.Params("redirect")
 	URL, err := database.FindURLbyShortURL(reirectURL)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error finding url by short url " + err.Error(),
 		})
 	}
 	URL.Clicked++
 	if err := database.UpdateURL(URL); err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error updating url clicks " + err.Error(),
 		})
 	}
