@@ -5,14 +5,26 @@ export default function URLForm() {
     const [longUrl, setLongUrl] = useState('');
     const [alias, setAlias] = useState('');
 
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        // Perform your submit logic here, e.g., API request
-        console.log('Long URL:', longUrl);
-        console.log('Alias:', alias);
-        // Reset form fields after submission
-        setLongUrl('');
-        setAlias('');
+        try {
+            const response = await fetch('http://localhost:5566/api/v1/shorts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ target_url: longUrl, short_url: alias }),
+            });
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+                setLongUrl('');
+                setAlias('');
+            } else {
+                console.log('Form submission failed!');
+            }
+        } catch (error) {
+            console.log('Error occurred during form submission:', error);
+        }
     };
     return (
         <>
