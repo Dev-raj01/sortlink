@@ -32,7 +32,7 @@ func GetAllURLs() ([]models.URL, error) {
 
 func GetURL(id string) (models.URL, error) {
 	var URL models.URL
-	tx := DBConn.First(&URL, id)
+	tx := DBConn.First(&URL, "id = ?", id)
 	if tx.Error != nil {
 		return URL, tx.Error
 	}
@@ -48,7 +48,7 @@ func UpdateURL(URL models.URL) error {
 }
 
 func DeleteURL(id string) error {
-	return DBConn.Unscoped().Delete(&models.URL{}, id).Error
+	return DBConn.Unscoped().Delete(&models.URL{}, "id = ?", id).Error
 }
 
 func FindURLbyShortURL(url string) (models.URL, error) {
