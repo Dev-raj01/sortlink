@@ -14,6 +14,7 @@ func InitRouter(app *fiber.App) {
 	short.Get("/shorts", GetAllURLs)
 	short.Get("/shorts/:id", GetAURLs)
 	short.Post("/shorts", CreateURL)
+	short.Delete("/shorts/:id", DeleteURL)
 }
 
 func GetAllURLs(c *fiber.Ctx) error {
@@ -55,4 +56,21 @@ func CreateURL(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(URL)
+}
+
+func DeleteURL(c *fiber.Ctx) error {
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "error parsing id " + err.Error(),
+		})
+	}
+	if err := database.DeleteURL(id); err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "error deleting id " + err.Error(),
+		})
+	}
+	return c.JSON(fiber.Map{
+		"message": "ok",
+	})
 }
