@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Dev-raj01/sortlink/models"
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
