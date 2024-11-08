@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/Dev-raj01/sortlink/database"
@@ -32,12 +30,7 @@ func GetAllURLs(c *fiber.Ctx) error {
 }
 
 func GetURL(c *fiber.Ctx) error {
-	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error parsing id " + err.Error(),
-		})
-	}
+	id := c.Params("id")
 	URL, err := database.GetURL(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -69,12 +62,7 @@ func CreateURL(c *fiber.Ctx) error {
 }
 
 func DeleteURL(c *fiber.Ctx) error {
-	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error parsing id " + err.Error(),
-		})
-	}
+	id := c.Params("id")
 	if err := database.DeleteURL(id); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "error deleting url by id " + err.Error(),
