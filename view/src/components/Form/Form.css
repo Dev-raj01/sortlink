@@ -11,6 +11,7 @@
     border: 1rem;
     border-radius: 1rem;
     padding: 1rem;
+    margin-top: 4rem;
     font-family: monaco, Consolas, Lucida Console, monospace;
     display: flex;
     flex-direction: column;
@@ -37,8 +38,8 @@
 #long-url:focus,
 #alias:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px #007bff;
+    border-color: #db2222;
+    box-shadow: 0 0 5px #ee2222;
 }
 
 #submit {
