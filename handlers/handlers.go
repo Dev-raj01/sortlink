@@ -4,8 +4,10 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/Dev-raj01/sortlink/database"
 	"github.com/Dev-raj01/sortlink/models"
+	"github.com/Dev-raj01/sortlink/utils"
 )
 
 func InitRouter(app *fiber.App) {
@@ -52,8 +54,14 @@ func CreateURL(c *fiber.Ctx) error {
 			"message": "error parsing body " + err.Error(),
 		})
 	}
+	URL.ID = uuid.NewString()
+	if err := utils.ValidateURL(URL); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "error validating URL " + err.Error(),
+		})
+	}
 	if err := database.CreateURL(URL); err != nil {
-		c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "error creating record for URL " + err.Error(),
 		})
 	}
