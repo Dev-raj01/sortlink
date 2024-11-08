@@ -23,7 +23,7 @@ func GetAllURLs(c *fiber.Ctx) error {
 	URLs, err := database.GetAllURLs()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "cannot get all urls " + err.Error(),
+			"message": "cannot get all urls: " + err.Error(),
 		})
 	}
 	return c.JSON(URLs)
@@ -34,7 +34,7 @@ func GetURL(c *fiber.Ctx) error {
 	URL, err := database.GetURL(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error getting url from database " + err.Error(),
+			"message": "error getting url from database: " + err.Error(),
 		})
 	}
 	return c.JSON(URL)
@@ -44,18 +44,18 @@ func CreateURL(c *fiber.Ctx) error {
 	var URL models.URL
 	if err := c.BodyParser(&URL); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "error parsing body " + err.Error(),
+			"message": "error parsing body: " + err.Error(),
 		})
 	}
 	URL.ID = uuid.NewString()
 	if err := utils.ValidateURL(URL); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "error validating URL " + err.Error(),
+			"message": "error validating URL: " + err.Error(),
 		})
 	}
 	if err := database.CreateURL(URL); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "error creating record for URL " + err.Error(),
+			"message": "error creating record for URL: " + err.Error(),
 		})
 	}
 	return c.JSON(URL)
@@ -65,7 +65,7 @@ func DeleteURL(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := database.DeleteURL(id); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error deleting url by id " + err.Error(),
+			"message": "error deleting url by id: " + err.Error(),
 		})
 	}
 	return c.JSON(fiber.Map{
@@ -78,13 +78,13 @@ func Redirect(c *fiber.Ctx) error {
 	URL, err := database.FindURLbyShortURL(reirectURL)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error finding url by short url " + err.Error(),
+			"message": "error finding url by short url: " + err.Error(),
 		})
 	}
 	URL.Clicked++
 	if err := database.UpdateURL(URL); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "error updating url clicks " + err.Error(),
+			"message": "error updating url clicks: " + err.Error(),
 		})
 	}
 	return c.Redirect(URL.TargetURL, fiber.StatusTemporaryRedirect)
